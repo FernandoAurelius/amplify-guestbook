@@ -31,3 +31,5 @@ coverage
 
 amplify_outputs.json
 .amplify/*
+
+.env

@@ -3,12 +3,14 @@ import './assets/main.css'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { Amplify } from 'aws-amplify'
-import { translations } from '@aws-amplify/ui-vue'
 import { I18n } from 'aws-amplify/utils'
-import outputs from '../amplify_outputs.json'
+import config from './config' // Importa a configuração dinâmica
 import App from './App.vue'
 
-Amplify.configure(outputs)
+// Configura o Amplify apenas se o backend estiver habilitado (ou seja, se o outputs.json foi encontrado)
+if (config.backendEnabled && config.amplifyOutputs) {
+  Amplify.configure(config.amplifyOutputs)
+}
 
 // Configurar idioma português brasileiro
 I18n.putVocabularies({

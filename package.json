@@ -42,7 +42,7 @@
     "vue-tsc": "^2.2.8"
   },
   "overrides": {
-    "@aws-sdk/types": "^3.830.0",
+    "@aws-sdk/types": "^3.821.0",
     "minimatch": "^9.0.5"
   },
   "engines": {
