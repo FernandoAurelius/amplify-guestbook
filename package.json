@@ -12,11 +12,14 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@aws-amplify/ui-vue": "^4.3.3",
     "@tailwindcss/vite": "^4.1.10",
     "@vueuse/core": "^13.4.0",
+    "aws-amplify": "^6.15.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-vue-next": "^0.518.0",
+    "nanoid": "^5.1.5",
     "pinia": "^3.0.1",
     "reka-ui": "^2.3.1",
     "tailwind-merge": "^3.3.1",
@@ -25,6 +28,8 @@
     "vue": "^3.5.13"
   },
   "devDependencies": {
+    "@aws-amplify/backend": "^1.16.1",
+    "@aws-amplify/backend-cli": "^1.8.0",
     "@tsconfig/node22": "^22.0.1",
     "@types/node": "^22.14.0",
     "@vitejs/plugin-vue": "^5.2.3",

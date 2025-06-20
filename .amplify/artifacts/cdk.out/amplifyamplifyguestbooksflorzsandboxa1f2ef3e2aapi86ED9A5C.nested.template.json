@@ -1,0 +1,978 @@
+{
+ "Description": "{\"createdOn\":\"Windows\",\"createdBy\":\"AmplifySandbox\",\"createdWith\":\"1.16.1\",\"stackType\":\"custom\",\"metadata\":{}}",
+ "Resources": {
+  "GuestbookApi0C5DC65B": {
+   "Type": "AWS::ApiGateway::RestApi",
+   "Properties": {
+    "Name": "guestbook",
+    "Tags": [
+     {
+      "Key": "amplify:deployment-type",
+      "Value": "sandbox"
+     },
+     {
+      "Key": "created-by",
+      "Value": "amplify"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "amplify-amplifyguestbooks-florz-sandbox-a1f2ef3e2a/api/GuestbookApi/Resource"
+   }
+  },
+  "GuestbookApiCloudWatchRoleB8A74D15": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "apigateway.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "amplify:deployment-type",
+      "Value": "sandbox"
+     },
+     {
+      "Key": "created-by",
+      "Value": "amplify"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "amplify-amplifyguestbooks-florz-sandbox-a1f2ef3e2a/api/GuestbookApi/CloudWatchRole/Resource"
+   }
+  },
+  "GuestbookApiAccount18F0F54F": {
+   "Type": "AWS::ApiGateway::Account",
+   "Properties": {
+    "CloudWatchRoleArn": {
+     "Fn::GetAtt": [
+      "GuestbookApiCloudWatchRoleB8A74D15",
+      "Arn"
+     ]
+    }
+   },
+   "DependsOn": [
+    "GuestbookApi0C5DC65B"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "amplify-amplifyguestbooks-florz-sandbox-a1f2ef3e2a/api/GuestbookApi/Account"
+   }
+  },
+  "GuestbookApiDeployment92795CBA45ce43cf49fe8beee32815d9661534f6": {
+   "Type": "AWS::ApiGateway::Deployment",
+   "Properties": {
+    "Description": "Automatically created by the RestApi construct",
+    "RestApiId": {
+     "Ref": "GuestbookApi0C5DC65B"
+    }
+   },
+   "DependsOn": [
+    "GuestbookApimessagesGET0B62A1DE",
+    "GuestbookApimessagesOPTIONSF871FEFD",
+    "GuestbookApimessagesPATCH5865A38F",
+    "GuestbookApimessagesPOST7A42C603",
+    "GuestbookApimessages6D824EFA",
+    "GuestbookApiOPTIONS4F061C3D"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "amplify-amplifyguestbooks-florz-sandbox-a1f2ef3e2a/api/GuestbookApi/Deployment/Resource"
+   }
+  },
+  "GuestbookApiDeploymentStagedevBA30F635": {
+   "Type": "AWS::ApiGateway::Stage",
+   "Properties": {
+    "CacheClusterEnabled": false,
+    "DeploymentId": {
+     "Ref": "GuestbookApiDeployment92795CBA45ce43cf49fe8beee32815d9661534f6"
+    },
+    "RestApiId": {
+     "Ref": "GuestbookApi0C5DC65B"
+    },
+    "StageName": "dev",
+    "Tags": [
+     {
+      "Key": "amplify:deployment-type",
+      "Value": "sandbox"
+     },
+     {
+      "Key": "created-by",
+      "Value": "amplify"
+     }
+    ]
+   },
+   "DependsOn": [
+    "GuestbookApiAccount18F0F54F"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "amplify-amplifyguestbooks-florz-sandbox-a1f2ef3e2a/api/GuestbookApi/DeploymentStage.dev/Resource"
+   }
+  },
+  "GuestbookApiOPTIONS4F061C3D": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Fn::GetAtt": [
+      "GuestbookApi0C5DC65B",
+      "RootResourceId"
+     ]
+    },
+    "RestApiId": {
+     "Ref": "GuestbookApi0C5DC65B"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "amplify-amplifyguestbooks-florz-sandbox-a1f2ef3e2a/api/GuestbookApi/Default/OPTIONS/Resource"
+   }
+  },
+  "GuestbookApimessages6D824EFA": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "GuestbookApi0C5DC65B",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "messages",
+    "RestApiId": {
+     "Ref": "GuestbookApi0C5DC65B"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "amplify-amplifyguestbooks-florz-sandbox-a1f2ef3e2a/api/GuestbookApi/Default/messages/Resource"
+   }
+  },
+  "GuestbookApimessagesOPTIONSF871FEFD": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "GuestbookApimessages6D824EFA"
+    },
+    "RestApiId": {
+     "Ref": "GuestbookApi0C5DC65B"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "amplify-amplifyguestbooks-florz-sandbox-a1f2ef3e2a/api/GuestbookApi/Default/messages/OPTIONS/Resource"
+   }
+  },
+  "GuestbookApimessagesGETApiPermissionamplifyamplifyguestbooksflorzsandboxa1f2ef3e2aapiGuestbookApiCB744D28GETmessages9A906FDE": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Ref": "referencetoamplifyamplifyguestbooksflorzsandboxa1f2ef3e2afunctionNestedStackfunctionNestedStackResourceDA4F60DDOutputsamplifyamplifyguestbooksflorzsandboxa1f2ef3e2afunctionmessageapilambda34E23CB2Arn"
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:",
+       {
+        "Ref": "AWS::Region"
+       },
+       ":",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "GuestbookApi0C5DC65B"
+       },
+       "/",
+       {
+        "Ref": "GuestbookApiDeploymentStagedevBA30F635"
+       },
+       "/GET/messages"
+      ]
+     ]
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "amplify-amplifyguestbooks-florz-sandbox-a1f2ef3e2a/api/GuestbookApi/Default/messages/GET/ApiPermission.amplifyamplifyguestbooksflorzsandboxa1f2ef3e2aapiGuestbookApiCB744D28.GET..messages"
+   }
+  },
+  "GuestbookApimessagesGETApiPermissionTestamplifyamplifyguestbooksflorzsandboxa1f2ef3e2aapiGuestbookApiCB744D28GETmessages3258148E": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Ref": "referencetoamplifyamplifyguestbooksflorzsandboxa1f2ef3e2afunctionNestedStackfunctionNestedStackResourceDA4F60DDOutputsamplifyamplifyguestbooksflorzsandboxa1f2ef3e2afunctionmessageapilambda34E23CB2Arn"
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:",
+       {
+        "Ref": "AWS::Region"
+       },
+       ":",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "GuestbookApi0C5DC65B"
+       },
+       "/test-invoke-stage/GET/messages"
+      ]
+     ]
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "amplify-amplifyguestbooks-florz-sandbox-a1f2ef3e2a/api/GuestbookApi/Default/messages/GET/ApiPermission.Test.amplifyamplifyguestbooksflorzsandboxa1f2ef3e2aapiGuestbookApiCB744D28.GET..messages"
+   }
+  },
+  "GuestbookApimessagesGET0B62A1DE": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:",
+        {
+         "Ref": "AWS::Region"
+        },
+        ":lambda:path/2015-03-31/functions/",
+        {
+         "Ref": "referencetoamplifyamplifyguestbooksflorzsandboxa1f2ef3e2afunctionNestedStackfunctionNestedStackResourceDA4F60DDOutputsamplifyamplifyguestbooksflorzsandboxa1f2ef3e2afunctionmessageapilambda34E23CB2Arn"
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "GuestbookApimessages6D824EFA"
+    },
+    "RestApiId": {
+     "Ref": "GuestbookApi0C5DC65B"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "amplify-amplifyguestbooks-florz-sandbox-a1f2ef3e2a/api/GuestbookApi/Default/messages/GET/Resource"
+   }
+  },
+  "GuestbookApimessagesPOSTApiPermissionamplifyamplifyguestbooksflorzsandboxa1f2ef3e2aapiGuestbookApiCB744D28POSTmessages8B1D7DF2": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Ref": "referencetoamplifyamplifyguestbooksflorzsandboxa1f2ef3e2afunctionNestedStackfunctionNestedStackResourceDA4F60DDOutputsamplifyamplifyguestbooksflorzsandboxa1f2ef3e2afunctionmessageapilambda34E23CB2Arn"
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:",
+       {
+        "Ref": "AWS::Region"
+       },
+       ":",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "GuestbookApi0C5DC65B"
+       },
+       "/",
+       {
+        "Ref": "GuestbookApiDeploymentStagedevBA30F635"
+       },
+       "/POST/messages"
+      ]
+     ]
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "amplify-amplifyguestbooks-florz-sandbox-a1f2ef3e2a/api/GuestbookApi/Default/messages/POST/ApiPermission.amplifyamplifyguestbooksflorzsandboxa1f2ef3e2aapiGuestbookApiCB744D28.POST..messages"
+   }
+  },
+  "GuestbookApimessagesPOSTApiPermissionTestamplifyamplifyguestbooksflorzsandboxa1f2ef3e2aapiGuestbookApiCB744D28POSTmessages25CD6DC4": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Ref": "referencetoamplifyamplifyguestbooksflorzsandboxa1f2ef3e2afunctionNestedStackfunctionNestedStackResourceDA4F60DDOutputsamplifyamplifyguestbooksflorzsandboxa1f2ef3e2afunctionmessageapilambda34E23CB2Arn"
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:",
+       {
+        "Ref": "AWS::Region"
+       },
+       ":",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "GuestbookApi0C5DC65B"
+       },
+       "/test-invoke-stage/POST/messages"
+      ]
+     ]
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "amplify-amplifyguestbooks-florz-sandbox-a1f2ef3e2a/api/GuestbookApi/Default/messages/POST/ApiPermission.Test.amplifyamplifyguestbooksflorzsandboxa1f2ef3e2aapiGuestbookApiCB744D28.POST..messages"
+   }
+  },
+  "GuestbookApimessagesPOST7A42C603": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "GuestbookAuthorizer27F9ADE3"
+    },
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:",
+        {
+         "Ref": "AWS::Region"
+        },
+        ":lambda:path/2015-03-31/functions/",
+        {
+         "Ref": "referencetoamplifyamplifyguestbooksflorzsandboxa1f2ef3e2afunctionNestedStackfunctionNestedStackResourceDA4F60DDOutputsamplifyamplifyguestbooksflorzsandboxa1f2ef3e2afunctionmessageapilambda34E23CB2Arn"
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "GuestbookApimessages6D824EFA"
+    },
+    "RestApiId": {
+     "Ref": "GuestbookApi0C5DC65B"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "amplify-amplifyguestbooks-florz-sandbox-a1f2ef3e2a/api/GuestbookApi/Default/messages/POST/Resource"
+   }
+  },
+  "GuestbookApimessagesPATCHApiPermissionamplifyamplifyguestbooksflorzsandboxa1f2ef3e2aapiGuestbookApiCB744D28PATCHmessages4FA5772C": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Ref": "referencetoamplifyamplifyguestbooksflorzsandboxa1f2ef3e2afunctionNestedStackfunctionNestedStackResourceDA4F60DDOutputsamplifyamplifyguestbooksflorzsandboxa1f2ef3e2afunctionmessageapilambda34E23CB2Arn"
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:",
+       {
+        "Ref": "AWS::Region"
+       },
+       ":",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "GuestbookApi0C5DC65B"
+       },
+       "/",
+       {
+        "Ref": "GuestbookApiDeploymentStagedevBA30F635"
+       },
+       "/PATCH/messages"
+      ]
+     ]
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "amplify-amplifyguestbooks-florz-sandbox-a1f2ef3e2a/api/GuestbookApi/Default/messages/PATCH/ApiPermission.amplifyamplifyguestbooksflorzsandboxa1f2ef3e2aapiGuestbookApiCB744D28.PATCH..messages"
+   }
+  },
+  "GuestbookApimessagesPATCHApiPermissionTestamplifyamplifyguestbooksflorzsandboxa1f2ef3e2aapiGuestbookApiCB744D28PATCHmessagesA86E158F": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Ref": "referencetoamplifyamplifyguestbooksflorzsandboxa1f2ef3e2afunctionNestedStackfunctionNestedStackResourceDA4F60DDOutputsamplifyamplifyguestbooksflorzsandboxa1f2ef3e2afunctionmessageapilambda34E23CB2Arn"
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:",
+       {
+        "Ref": "AWS::Region"
+       },
+       ":",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "GuestbookApi0C5DC65B"
+       },
+       "/test-invoke-stage/PATCH/messages"
+      ]
+     ]
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "amplify-amplifyguestbooks-florz-sandbox-a1f2ef3e2a/api/GuestbookApi/Default/messages/PATCH/ApiPermission.Test.amplifyamplifyguestbooksflorzsandboxa1f2ef3e2aapiGuestbookApiCB744D28.PATCH..messages"
+   }
+  },
+  "GuestbookApimessagesPATCH5865A38F": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "GuestbookAuthorizer27F9ADE3"
+    },
+    "HttpMethod": "PATCH",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:",
+        {
+         "Ref": "AWS::Region"
+        },
+        ":lambda:path/2015-03-31/functions/",
+        {
+         "Ref": "referencetoamplifyamplifyguestbooksflorzsandboxa1f2ef3e2afunctionNestedStackfunctionNestedStackResourceDA4F60DDOutputsamplifyamplifyguestbooksflorzsandboxa1f2ef3e2afunctionmessageapilambda34E23CB2Arn"
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "GuestbookApimessages6D824EFA"
+    },
+    "RestApiId": {
+     "Ref": "GuestbookApi0C5DC65B"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "amplify-amplifyguestbooks-florz-sandbox-a1f2ef3e2a/api/GuestbookApi/Default/messages/PATCH/Resource"
+   }
+  },
+  "GuestbookAuthorizer27F9ADE3": {
+   "Type": "AWS::ApiGateway::Authorizer",
+   "Properties": {
+    "IdentitySource": "method.request.header.Authorization",
+    "Name": "amplifyamplifyguestbooksflorzsandboxa1f2ef3e2aapiGuestbookAuthorizerB49DCB77",
+    "ProviderARNs": [
+     {
+      "Ref": "referencetoamplifyamplifyguestbooksflorzsandboxa1f2ef3e2aauthNestedStackauthNestedStackResource0449782EOutputsamplifyamplifyguestbooksflorzsandboxa1f2ef3e2aauthamplifyAuthUserPoolF544064FArn"
+     }
+    ],
+    "RestApiId": {
+     "Ref": "GuestbookApi0C5DC65B"
+    },
+    "Type": "COGNITO_USER_POOLS"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "amplify-amplifyguestbooks-florz-sandbox-a1f2ef3e2a/api/GuestbookAuthorizer/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/1WOwU7DQAxEv6X3zZJG/EAoV6BKxRm5u27qdrOO1l6iEuXfUUhA5eQ3M7JmKluVW1tuYJDC+WsR6GjHVxRFf1BwVwODfIzQUwuKA9zs2KBo3ZPZneId1s5xjmqesQ986zDq7N6pg0KLs7dAg8I5OXwCQfOCemY/hyv9pmvJytxGUn4XTHvmIHXWMyf6wvQz4E9NhqCzY8Nh+eeAkwnQHT3Y3SnuMXUkQhynfz1vWfusk4ns0V7k4bOq7PbRlpuLEBUpR6UObbPcb6zEuS43AQAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "amplify-amplifyguestbooks-florz-sandbox-a1f2ef3e2a/api/CDKMetadata/Default"
+   },
+   "Condition": "CDKMetadataAvailable"
+  }
+ },
+ "Outputs": {
+  "GuestbookApiEndpoint961D601B": {
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "GuestbookApi0C5DC65B"
+      },
+      ".execute-api.",
+      {
+       "Ref": "AWS::Region"
+      },
+      ".",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "GuestbookApiDeploymentStagedevBA30F635"
+      },
+      "/"
+     ]
+    ]
+   }
+  },
+  "amplifyamplifyguestbooksflorzsandboxa1f2ef3e2aapiGuestbookApiC6A68E59Ref": {
+   "Value": {
+    "Ref": "GuestbookApi0C5DC65B"
+   }
+  },
+  "amplifyamplifyguestbooksflorzsandboxa1f2ef3e2aapiGuestbookApiDeploymentStagedev5F06148DRef": {
+   "Value": {
+    "Ref": "GuestbookApiDeploymentStagedevBA30F635"
+   }
+  }
+ },
+ "Conditions": {
+  "CDKMetadataAvailable": {
+   "Fn::Or": [
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "af-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-3"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-south-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-3"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-4"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ca-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ca-west-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "cn-north-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "cn-northwest-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-central-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-north-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-south-2"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-3"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "il-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "me-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "me-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "sa-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-east-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-west-1"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "AWS::Region"
+      },
+      "us-west-2"
+     ]
+    }
+   ]
+  }
+ },
+ "Parameters": {
+  "referencetoamplifyamplifyguestbooksflorzsandboxa1f2ef3e2afunctionNestedStackfunctionNestedStackResourceDA4F60DDOutputsamplifyamplifyguestbooksflorzsandboxa1f2ef3e2afunctionmessageapilambda34E23CB2Arn": {
+   "Type": "String"
+  },
+  "referencetoamplifyamplifyguestbooksflorzsandboxa1f2ef3e2aauthNestedStackauthNestedStackResource0449782EOutputsamplifyamplifyguestbooksflorzsandboxa1f2ef3e2aauthamplifyAuthUserPoolF544064FArn": {
+   "Type": "String"
+  }
+ }
+}
