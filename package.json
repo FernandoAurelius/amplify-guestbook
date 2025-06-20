@@ -40,5 +40,13 @@
     "vite": "^6.2.4",
     "vite-plugin-vue-devtools": "^7.7.2",
     "vue-tsc": "^2.2.8"
+  },
+  "overrides": {
+    "@aws-sdk/types": "^3.830.0",
+    "minimatch": "^9.0.5"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=9.0.0"
   }
 }
