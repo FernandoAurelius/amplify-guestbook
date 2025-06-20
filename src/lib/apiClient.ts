@@ -1,7 +1,5 @@
 import { fetchAuthSession } from 'aws-amplify/auth'
-import config from '../config'
-
-const API_URL = config.apiUrl
+import { backendEnabled, apiUrl } from '../config'
 
 /**
  * A wrapper around the native fetch API that automatically adds the
@@ -14,7 +12,7 @@ const API_URL = config.apiUrl
 export async function authenticatedFetch(endpoint: string, options: RequestInit = {}) {
   // Guard clause: esta função não deve ser chamada se o backend não estiver ativo.
   // A lógica nos stores deve prevenir que isso aconteça, mas esta é uma segurança adicional.
-  if (!config.backendEnabled || !API_URL) {
+  if (!backendEnabled || !apiUrl) {
     const errorMessage =
       'authenticatedFetch foi chamada, mas o backend não está habilitado ou a URL da API não foi encontrada.'
     console.error(errorMessage)
@@ -29,7 +27,7 @@ export async function authenticatedFetch(endpoint: string, options: RequestInit 
     const session = await fetchAuthSession()
     const token = session.tokens?.idToken?.toString()
 
-    const response = await fetch(`${API_URL}${endpoint}`, {
+    const response = await fetch(`${apiUrl}${endpoint}`, {
       ...options,
       headers: {
         'Content-Type': 'application/json',
@@ -41,7 +39,7 @@ export async function authenticatedFetch(endpoint: string, options: RequestInit 
     if (!response.ok) {
       const errorBody = await response.text()
       console.error(`API Error: ${response.status} ${response.statusText}`, {
-        url: `${API_URL}${endpoint}`,
+        url: `${apiUrl}${endpoint}`,
         body: errorBody
       })
       throw new Error(`Request failed with status ${response.status}`)
