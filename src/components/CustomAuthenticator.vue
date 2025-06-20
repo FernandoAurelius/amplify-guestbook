@@ -123,6 +123,46 @@
                 </button>
         </form>
 
+        <!-- Formulário de Confirmação de Cadastro -->
+        <form
+            v-else-if="currentMode === 'confirmSignUp'"
+            @submit.prevent="handleConfirmSignUp"
+            class="space-y-4"
+        >
+            <div>
+                <label
+                    for="confirmCode"
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                >
+                    Código de Confirmação
+                </label>
+                <input
+                    id="confirmCode"
+                    v-model="confirmForm.code"
+                    type="text"
+                    required
+                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-all duration-200"
+                    placeholder="Digite o código do seu e-mail"
+                />
+            </div>
+            <button
+                type="submit"
+                :disabled="isLoading"
+                class="w-full bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 disabled:transform-none"
+            >
+                {{ isLoading ? 'Confirmando...' : 'Confirmar Cadastro' }}
+            </button>
+            <div class="text-center">
+                <button
+                    type="button"
+                    @click="currentMode = 'signIn'"
+                    class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm font-medium"
+                >
+                    Voltar ao Login
+                </button>
+            </div>
+        </form>
+
         <!-- Formulário de Reset de Senha -->
         <form v-else-if="currentMode === 'forgotPassword'" @submit.prevent="handleForgotPassword" class="space-y-4">
             <div>
@@ -154,37 +194,12 @@
             class="mt-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-200 px-4 py-3 rounded-lg">
             {{ successMessage }}
         </div>
-
-        <!-- Footer com opções alternativas -->
-        <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-            <p class="text-center text-sm text-gray-600 dark:text-gray-400 mb-4">
-                Ou continue com:
-            </p>
-            <div class="flex justify-center space-x-4">
-                <button @click="signInWithGoogle"
-                    class="flex items-center justify-center w-12 h-12 bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/40 text-red-600 dark:text-red-400 rounded-full transition-colors duration-200"
-                    title="Entrar com Google">
-                    <Mail class="w-5 h-5" />
-                </button>
-                <button @click="signInWithPhone"
-                    class="flex items-center justify-center w-12 h-12 bg-green-50 hover:bg-green-100 dark:bg-green-900/20 dark:hover:bg-green-900/40 text-green-600 dark:text-green-400 rounded-full transition-colors duration-200"
-                    title="Entrar com Telefone">
-                    <Phone class="w-5 h-5" />
-                </button>
-                <button @click="signInWithUsername"
-                    class="flex items-center justify-center w-12 h-12 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/40 text-blue-600 dark:text-blue-400 rounded-full transition-colors duration-200"
-                    title="Entrar com Nome de Usuário">
-                    <User class="w-5 h-5" />
-                </button>
-            </div>
-        </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { signIn, signUp, resetPassword } from 'aws-amplify/auth'
-import { Mail, Phone, User } from 'lucide-vue-next'
+import { signIn, signUp, confirmSignUp, resetPassword } from 'aws-amplify/auth'
 
 // Emits
 const emit = defineEmits<{
@@ -192,7 +207,7 @@ const emit = defineEmits<{
 }>()
 
 // Estado reativo
-const currentMode = ref<'signIn' | 'signUp' | 'forgotPassword'>('signIn')
+const currentMode = ref<'signIn' | 'signUp' | 'confirmSignUp' | 'forgotPassword'>('signIn')
 const isLoading = ref(false)
 const errorMessage = ref('')
 const successMessage = ref('')
@@ -212,6 +227,8 @@ const signUpForm = ref({
 const resetForm = ref({
     email: ''
 })
+
+const confirmForm = ref({ email:'', code: '' })
 
 // Validação de senha
 const passwordValidation = computed(() => {
@@ -308,16 +325,9 @@ const handleSignUp = async () => {
 
         console.log('Signup result:', result)
 
-        if (result.isSignUpComplete) {
-            // Conta criada e verificada automaticamente
-            currentMode.value = 'signIn'
-            successMessage.value = 'Conta criada com sucesso! Faça login para continuar.'
-        } else {
-            // Com auto-confirmação habilitada, isso não deveria acontecer
-            // TODO: Implementar fluxo de confirmação quando necessário
-            currentMode.value = 'signIn'
-            successMessage.value = 'Conta criada! Agora você pode fazer login.'
-        }
+        currentMode.value = 'confirmSignUp'
+        confirmForm.value.email = signUpForm.value.email
+        successMessage.value = 'Código enviado ao seu e-mail. Verifique e confirme aqui.'
     } catch (error: any) {
         errorMessage.value = translateError(error)
     } finally {
@@ -340,16 +350,21 @@ const handleForgotPassword = async () => {
     }
 }
 
-// Métodos alternativos de login (placeholder por enquanto)
-const signInWithGoogle = () => {
-    errorMessage.value = 'Login com Google será implementado em breve!'
-}
-
-const signInWithPhone = () => {
-    errorMessage.value = 'Login com telefone será implementado em breve!'
-}
-
-const signInWithUsername = () => {
-    errorMessage.value = 'Login com nome de usuário será implementado em breve!'
+const handleConfirmSignUp = async () => {
+    isLoading.value = true
+    errorMessage.value = ''
+    successMessage.value = ''
+    try {
+        await confirmSignUp({
+            username: confirmForm.value.email,
+            confirmationCode: confirmForm.value.code
+        })
+        successMessage.value = 'E-mail confirmado! Agora faça login.'
+        currentMode.value = 'signIn'
+    } catch (error: any) {
+        errorMessage.value = translateError(error)
+    } finally {
+        isLoading.value = false
+    }
 }
 </script>
