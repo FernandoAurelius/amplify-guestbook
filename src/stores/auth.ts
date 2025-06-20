@@ -2,24 +2,25 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { getCurrentUser, signOut } from 'aws-amplify/auth'
-import config from '../config' // Importa a configuração centralizada
+// Importa a variável e a renomeia para evitar conflito de nomes
+import { backendEnabled as isBackendEnabled } from '../config' 
 
 export const useAuthStore = defineStore('auth', () => {
   const currentUser = ref<any>(null)
   const isAuthenticated = ref(false)
 
-  // A decisão agora vem do módulo de configuração
-  const backendEnabled = config.backendEnabled
+  // Converte o booleano importado em um ref reativo
+  const backendEnabled = ref(isBackendEnabled)
 
   async function checkUser() {
-    // Se o backend estiver desabilitado, simula um usuário logado
-    if (!backendEnabled) {
+    // Agora usa .value para acessar o valor do ref
+    if (!backendEnabled.value) {
       currentUser.value = {
         username: 'Palestrante',
         attributes: { name: 'Palestrante', email: 'mock@example.com' }
       }
       isAuthenticated.value = true
-      return // Early return
+      return // Saída antecipada
     }
 
     try {
@@ -35,7 +36,8 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function signOutUser() {
-    if (!backendEnabled) {
+    // Usa .value aqui também
+    if (!backendEnabled.value) {
       currentUser.value = null
       isAuthenticated.value = false
       return

@@ -2,7 +2,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { useAuthStore } from './auth'
-import config from '../config'
 import { authenticatedFetch } from '../lib/apiClient'
 
 interface Message {
@@ -28,7 +27,7 @@ export const useMessages = defineStore('messages', () => {
   async function load() {
     loading.value = true
     try {
-      if (config.backendEnabled) {
+      if (auth.backendEnabled) {
         const response = await authenticatedFetch('/messages')
         items.value = await response.json()
       } else {
@@ -51,10 +50,10 @@ export const useMessages = defineStore('messages', () => {
       userName: auth.currentUser?.attributes?.name || auth.currentUser?.username
     }
 
-    if (config.backendEnabled) {
-      await authenticatedFetch('/messages', { 
-        method: 'POST', 
-        body: JSON.stringify(messageToSend) 
+    if (auth.backendEnabled) {
+      await authenticatedFetch('/messages', {
+        method: 'POST',
+        body: JSON.stringify(messageToSend)
       })
     } else {
       items.value.unshift({
@@ -70,11 +69,11 @@ export const useMessages = defineStore('messages', () => {
   async function like(id: string) {
     if (!auth.isAuthenticated) return
 
-    if (config.backendEnabled) {
+    if (auth.backendEnabled) {
       try {
-        await authenticatedFetch('/messages', { 
-          method: 'PATCH', 
-          body: JSON.stringify({ id }) 
+        await authenticatedFetch('/messages', {
+          method: 'PATCH',
+          body: JSON.stringify({ id })
         })
         await load() // Recarrega para garantir consistência
       } catch (error) {
