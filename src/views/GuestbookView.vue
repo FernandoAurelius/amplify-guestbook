@@ -1,21 +1,29 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import MessageCard from '@/components/MessageCard.vue'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Textarea } from '@/components/ui/textarea'
 import { Heart, LogIn, LogOut, Plus } from 'lucide-vue-next'
 import { type Message, getMessages, createMessage, likeMessage } from '@/lib/api'
+import '@aws-amplify/ui-vue/styles.css'
+import { Authenticator, useAuthenticator } from '@aws-amplify/ui-vue'
+import { I18n } from 'aws-amplify/utils'
+import { translations } from '@aws-amplify/ui-vue'
 
-const isAuthenticated = false
+I18n.putVocabularies(translations)
+I18n.setLanguage("pt")
+const auth = useAuthenticator()
+const authOpen = ref(false)
+
+const isAuthenticated = computed(() => auth.authStatus === 'authenticated')
 const dialogOpen = ref(false)
 
 const messages = ref<Message[]>([])
 
 const triggerPrimaryAction = () => {
-  if (!isAuthenticated) {
-    console.info('TODO: iniciar fluxo de autenticacao')
+  if (!isAuthenticated.value) {
+    authOpen.value = true
     return
   }
 
@@ -32,6 +40,10 @@ onMounted(async () => {
 </script>
 
 <template>
+  <div :class="{ 'hidden': !authOpen }">
+    <Authenticator variation="modal" />
+  </div>
+
   <div class="min-h-screen w-full bg-linear-to-b from-amber-50 via-white to-emerald-50 text-slate-800 flex flex-col">
     <main class="mx-auto w-full max-w-6xl px-4 py-10 space-y-10 flex-1">
       <section class="text-center space-y-4">
@@ -114,11 +126,8 @@ onMounted(async () => {
     </main>
 
     <footer class="mt-auto px-4 py-8">
-      <p v-if="isAuthenticated" class="text-xs text-center text-slate-500">
+      <p v-if="!isAuthenticated" class="text-xs text-center text-slate-500">
         Faça login para postar e curtir mensagens.
-      </p>
-      <p v-else class="text-xs text-center text-slate-500">
-        Amplify Guestbook - {{ new Date().getFullYear() }}
       </p>
     </footer>
   </div>

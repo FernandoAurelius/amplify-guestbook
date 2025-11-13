@@ -14,6 +14,8 @@
         "type-check": "vue-tsc --build"
     },
     "dependencies": {
+        "@aws-amplify/ui": "^6.12.1",
+        "@aws-amplify/ui-vue": "^4.3.6",
         "@tailwindcss/vite": "^4.1.17",
         "@vueuse/core": "^14.0.0",
         "aws-amplify": "^6.15.8",
