@@ -14,6 +14,8 @@
         "type-check": "vue-tsc --build"
     },
     "dependencies": {
+        "@aws-amplify/ui": "^6.12.1",
+        "@aws-amplify/ui-vue": "^4.3.6",
         "@tailwindcss/vite": "^4.1.17",
         "@vueuse/core": "^14.0.0",
         "aws-amplify": "^6.15.8",
@@ -30,6 +32,7 @@
         "@aws-amplify/backend": "^1.18.0",
         "@aws-amplify/backend-cli": "^1.8.0",
         "@tsconfig/node22": "^22.0.2",
+        "@types/aws-lambda": "^8.10.158",
         "@types/node": "^22.18.11",
         "@vitejs/plugin-vue": "^6.0.1",
         "@vue/tsconfig": "^0.8.1",
@@ -43,5 +46,5 @@
         "vite-plugin-vue-devtools": "^8.0.3",
         "vue-tsc": "^3.1.1"
     },
-    "packageManager": "pnpm@10.18.1+sha512.77a884a165cbba2d8d1c19e3b4880eee6d2fcabd0d879121e282196b80042351d5eb3ca0935fa599da1dc51265cc68816ad2bddd2a2de5ea9fdf92adbec7cd34"
+    "packageManager": "pnpm@10.18.1"
 }
