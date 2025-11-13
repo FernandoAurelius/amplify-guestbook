@@ -138,8 +138,8 @@ onMounted(async () => {
       </section>
     </main>
 
-    <footer class="mt-auto px-4 py-8">
-      <p v-if="isAuthenticated" class="text-xs text-center text-slate-500">
+    <footer class="mt-auto px-4 py-4">
+      <p v-if="!isAuthenticated"  class="text-xs text-center text-slate-500">
         Faça login para postar e curtir mensagens.
       </p>
       <p v-else class="text-xs text-center text-slate-500">
