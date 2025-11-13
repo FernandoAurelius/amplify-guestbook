@@ -11,7 +11,29 @@ type Message = { id: string; authorEmail?: string; text: string; createdAt: stri
 const isAuthenticated = false
 const dialogOpen = ref(false)
 
-const messages: Message[] = []
+const messages: Message[] = [
+  {
+    id: '1',
+    authorEmail: 'demo@hackthecloud.unb',
+    text: 'Bem-vindo ao Amplify Guestbook!',
+    createdAt: new Date().toISOString(),
+    likes: 3
+  },
+  {
+    id: '2',
+    authorEmail: 'exemplo1@teste.com',
+    text: 'Teste 1!',
+    createdAt: new Date().toISOString(),
+    likes: 1
+  },
+  {
+    id: '3',
+    authorEmail: 'exemplo2@teste.com',
+    text: 'Teste 2!',
+    createdAt: new Date().toISOString(),
+    likes: 5
+  }
+]
 
 const triggerPrimaryAction = () => {
   if (!isAuthenticated) {
