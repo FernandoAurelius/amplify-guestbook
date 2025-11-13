@@ -122,12 +122,12 @@ const handleDialogOpenChange = (value: boolean) => {
         >
           <MessageCard
             v-for="m in messages"
-            :key="m.id"
-            :id="m.id"
-            :text="m.text"
-            :user="m.authorEmail"
-            :createdAt="m.createdAt"
-            :likes="m.likes"
+            :key="m.id!"
+            :id="m.id!"
+            :text="m.text!"
+            :user="m.authorEmail!"
+            :createdAt="m.createdAt!"
+            :likes="m.likes!"
             :canLike="isAuthenticated"
             @like="() => {}"
           />
