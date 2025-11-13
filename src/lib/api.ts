@@ -14,12 +14,12 @@ export async function createMessage(text: string, authorEmail: string) {
     await client.models.Message.create({
         text,
         authorEmail,
-    });
+    }, { authMode: 'userPool' });
 }
 
 export async function likeMessage(id: string, currentLikes: number) {
     await client.models.Message.update({
         id,
         likes: currentLikes + 1,
-    });
+    }, { authMode: 'userPool' });
 }

@@ -21,6 +21,8 @@ const dialogOpen = ref(false)
 
 const messages = ref<Message[]>([])
 
+const messageText = ref('')
+
 const triggerPrimaryAction = () => {
   if (!isAuthenticated.value) {
     authOpen.value = true
@@ -32,6 +34,17 @@ const triggerPrimaryAction = () => {
 
 const handleDialogOpenChange = (value: boolean) => {
   dialogOpen.value = value
+}
+
+async function submitMessage() {
+  await createMessage(messageText.value, auth.user?.signInDetails?.loginId)
+  messages.value = await getMessages()
+  dialogOpen.value = false
+}
+
+async function submitLike(id: string, likes: number) {
+  await likeMessage(id, likes)
+  messages.value = await getMessages()
 }
 
 onMounted(async () => {
@@ -57,19 +70,13 @@ onMounted(async () => {
         </p>
 
         <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
-          <Button 
-            v-if="!isAuthenticated" 
-            variant="outline"
-            class="border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
-          >
+          <Button v-if="!isAuthenticated" variant="outline"
+            class="border-slate-200 bg-white text-slate-700 hover:bg-slate-50" @click="authOpen = true">
             <LogIn class="h-4 w-4 mr-2" />
             Entrar
           </Button>
-          <Button 
-            v-else 
-            variant="outline" 
-            class="border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
-          >
+          <Button v-else variant="outline" class="border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+            @click="auth.signOut">
             <LogOut class="h-4 w-4 mr-2" />
             Sair
           </Button>
@@ -94,9 +101,9 @@ onMounted(async () => {
               <DialogHeader>
                 <DialogTitle>Escrever nova mensagem</DialogTitle>
               </DialogHeader>
-              <Textarea placeholder="Deixe sua mensagem..." class="min-h-[120px] bg-white border-slate-200" />
+              <Textarea v-model="messageText" placeholder="Deixe sua mensagem..." class="min-h-[120px] bg-white border-slate-200" />
               <DialogFooter>
-                <Button disabled>Enviar</Button>
+                <Button :disabled="messageText.trim().length === 0" @click="submitMessage">Enviar</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
@@ -104,7 +111,8 @@ onMounted(async () => {
       </section>
 
       <section class="space-y-8">
-        <div class="
+        <div
+          class="
             grid gap-5
             grid-cols-1
             sm:grid-cols-2
@@ -119,7 +127,7 @@ onMounted(async () => {
             :createdAt="m.createdAt"
             :likes="m.likes"
             :canLike="isAuthenticated"
-            @like="() => {}"
+            @like="submitLike"
           />
         </div>
       </section>
@@ -128,6 +136,9 @@ onMounted(async () => {
     <footer class="mt-auto px-4 py-8">
       <p v-if="!isAuthenticated" class="text-xs text-center text-slate-500">
         Faça login para postar e curtir mensagens.
+      </p>
+      <p v-else class="text-cs text-center text-slate-500">
+        Amplify Guestbook - {{ new Date().getFullYear() }} - Bem-vindo, {{ auth.user?.signInDetails?.loginId }}
       </p>
     </footer>
   </div>
