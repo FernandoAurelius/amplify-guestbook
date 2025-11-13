@@ -1,20 +1,31 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import MessageCard from '@/components/MessageCard.vue'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Textarea } from '@/components/ui/textarea'
 import { Heart, LogIn, LogOut, Plus } from 'lucide-vue-next'
 import { type Message, getMessages, createMessage, likeMessage } from '@/lib/api'
+import '@aws-amplify/ui-vue/styles.css'
+import { Authenticator, useAuthenticator } from '@aws-amplify/ui-vue'
+import { I18n } from 'aws-amplify/utils'
+import { translations } from '@aws-amplify/ui-vue'
 
-const isAuthenticated = false
+I18n.putVocabularies(translations)
+I18n.setLanguage("pt")
+const auth = useAuthenticator()
+const authOpen = ref(false)
+
+const isAuthenticated = computed(() => auth.authStatus === 'authenticated')
 const dialogOpen = ref(false)
 
 const messages = ref<Message[]>([])
 
+const messageText = ref('')
+
 const triggerPrimaryAction = () => {
-  if (!isAuthenticated) {
-    console.info('TODO: iniciar fluxo de autenticacao')
+  if (!isAuthenticated.value) {
+    authOpen.value = true
     return
   }
 
@@ -25,12 +36,27 @@ const handleDialogOpenChange = (value: boolean) => {
   dialogOpen.value = value
 }
 
+async function submitMessage() {
+  await createMessage(messageText.value, auth.user?.signInDetails?.loginId)
+  messages.value = await getMessages()
+  dialogOpen.value = false
+}
+
+async function submitLike(id: string, likes: number) {
+  await likeMessage(id, likes)
+  messages.value = await getMessages()
+}
+
 onMounted(async () => {
     messages.value = await getMessages()
 })
 </script>
 
 <template>
+  <div :class="{ 'hidden': !authOpen }">
+    <Authenticator variation="modal" />
+  </div>
+
   <div class="min-h-screen w-full bg-linear-to-b from-amber-50 via-white to-emerald-50 text-slate-800 flex flex-col">
     <main class="mx-auto w-full max-w-6xl px-4 py-10 space-y-10 flex-1">
       <section class="text-center space-y-4">
@@ -44,19 +70,13 @@ onMounted(async () => {
         </p>
 
         <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
-          <Button 
-            v-if="!isAuthenticated" 
-            variant="outline"
-            class="border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
-          >
+          <Button v-if="!isAuthenticated" variant="outline"
+            class="border-slate-200 bg-white text-slate-700 hover:bg-slate-50" @click="authOpen = true">
             <LogIn class="h-4 w-4 mr-2" />
             Entrar
           </Button>
-          <Button 
-            v-else 
-            variant="outline" 
-            class="border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
-          >
+          <Button v-else variant="outline" class="border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+            @click="auth.signOut">
             <LogOut class="h-4 w-4 mr-2" />
             Sair
           </Button>
@@ -81,9 +101,9 @@ onMounted(async () => {
               <DialogHeader>
                 <DialogTitle>Escrever nova mensagem</DialogTitle>
               </DialogHeader>
-              <Textarea placeholder="Deixe sua mensagem..." class="min-h-[120px] bg-white border-slate-200" />
+              <Textarea v-model="messageText" placeholder="Deixe sua mensagem..." class="min-h-[120px] bg-white border-slate-200" />
               <DialogFooter>
-                <Button disabled>Enviar</Button>
+                <Button :disabled="messageText.trim().length === 0" @click="submitMessage">Enviar</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
@@ -91,7 +111,8 @@ onMounted(async () => {
       </section>
 
       <section class="space-y-8">
-        <div class="
+        <div
+          class="
             grid gap-5
             grid-cols-1
             sm:grid-cols-2
@@ -106,18 +127,18 @@ onMounted(async () => {
             :createdAt="m.createdAt"
             :likes="m.likes"
             :canLike="isAuthenticated"
-            @like="() => {}"
+            @like="submitLike"
           />
         </div>
       </section>
     </main>
 
     <footer class="mt-auto px-4 py-8">
-      <p v-if="isAuthenticated" class="text-xs text-center text-slate-500">
+      <p v-if="!isAuthenticated" class="text-xs text-center text-slate-500">
         Faça login para postar e curtir mensagens.
       </p>
-      <p v-else class="text-xs text-center text-slate-500">
-        Amplify Guestbook - {{ new Date().getFullYear() }}
+      <p v-else class="text-cs text-center text-slate-500">
+        Amplify Guestbook - {{ new Date().getFullYear() }} - Bem-vindo, {{ auth.user?.signInDetails?.loginId }}
       </p>
     </footer>
   </div>
