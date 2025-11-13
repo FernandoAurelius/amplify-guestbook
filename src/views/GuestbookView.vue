@@ -1,20 +1,29 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import MessageCard from '@/components/MessageCard.vue'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Textarea } from '@/components/ui/textarea'
 import { Heart, LogIn, LogOut, Plus } from 'lucide-vue-next'
 import { type Message, getMessages, createMessage, likeMessage } from '@/lib/api'
+import '@aws-amplify/ui-vue/styles.css'
+import { Authenticator, useAuthenticator } from '@aws-amplify/ui-vue'
+import { I18n } from 'aws-amplify/utils'
+import { translations } from '@aws-amplify/ui-vue'
 
-const isAuthenticated = false
+I18n.putVocabularies(translations)
+I18n.setLanguage("pt")
+const auth = useAuthenticator()
+const authOpen = ref(false)
+
+const isAuthenticated = computed(() => auth.authStatus === 'authenticated')
 const dialogOpen = ref(false)
 
 const messages = ref<Message[]>([])
 
 const triggerPrimaryAction = () => {
-  if (!isAuthenticated) {
-    console.info('TODO: iniciar fluxo de autenticacao')
+  if (!isAuthenticated.value) {
+    authOpen.value = true
     return
   }
 
@@ -31,6 +40,10 @@ onMounted(async () => {
 </script>
 
 <template>
+  <div :class="{ 'hidden': !authOpen }">
+    <Authenticator variation="modal" />
+  </div>
+
   <div class="min-h-screen w-full bg-linear-to-b from-amber-50 via-white to-emerald-50 text-slate-800 flex flex-col">
     <main class="mx-auto w-full max-w-6xl px-4 py-10 space-y-10 flex-1">
       <section class="text-center space-y-4">
@@ -39,13 +52,20 @@ onMounted(async () => {
         </p>
         <h1 class="text-3xl sm:text-4xl font-bold text-slate-900">Mural com likes e mensagens da comunidade</h1>
         <p class="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto">
-          Compartilhe novidades, deixe recados e celebre cada like. Autentique-se para publicar ou curtir mensagens na API REST.
+          Compartilhe novidades, deixe recados e celebre cada like. Autentique-se para publicar ou curtir mensagens na
+          API REST.
         </p>
 
         <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
-          <Button variant="outline" class="border-slate-200 bg-white text-slate-700 hover:bg-slate-50">
-            <component :is="isAuthenticated ? LogOut : LogIn" class="h-4 w-4 mr-2" />
-            {{ isAuthenticated ? 'Sair' : 'Entrar' }}
+          <Button v-if="!isAuthenticated" variant="outline"
+            class="border-slate-200 bg-white text-slate-700 hover:bg-slate-50" @click="authOpen = true">
+            <LogIn class="h-4 w-4 mr-2" />
+            Entrar
+          </Button>
+          <Button v-else variant="outline" class="border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+            @click="auth.signOut">
+            <LogOut class="h-4 w-4 mr-2" />
+            Sair
           </Button>
 
           <Dialog :open="dialogOpen" @update:open="handleDialogOpenChange">
@@ -101,8 +121,11 @@ onMounted(async () => {
     </main>
 
     <footer class="mt-auto px-4 py-8">
-      <p class="text-xs text-center text-slate-500">
+      <p v-if="!isAuthenticated" class="text-xs text-center text-slate-500">
         Faça login para postar e curtir mensagens.
+      </p>
+      <p v-else class="text-cs text-center text-slate-500">
+        Amplify Guestbook - {{ new Date().getFullYear() }} - Bem-vindo, {{ auth.user?.signInDetails?.loginId }}
       </p>
     </footer>
   </div>
