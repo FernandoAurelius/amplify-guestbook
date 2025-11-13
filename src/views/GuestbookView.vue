@@ -2,11 +2,11 @@
 import { ref } from 'vue'
 import MessageCard from '@/components/MessageCard.vue'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Textarea } from '@/components/ui/textarea'
 import { Heart, LogIn, LogOut, Plus } from 'lucide-vue-next'
 
-type Message = { id: string; user?: string; text: string; createdAt: string; likes: number }
+type Message = { id: string; authorEmail?: string; text: string; createdAt: string; likes: number }
 
 const isAuthenticated = false
 const dialogOpen = ref(false)
@@ -14,21 +14,21 @@ const dialogOpen = ref(false)
 const messages: Message[] = [
   {
     id: '1',
-    user: 'demo@hackthecloud.unb',
+    authorEmail: 'demo@hackthecloud.unb',
     text: 'Bem-vindo ao Amplify Guestbook!',
     createdAt: new Date().toISOString(),
     likes: 3
   },
   {
     id: '2',
-    user: 'ana@unb.br',
+    authorEmail: 'ana@unb.br',
     text: 'Serverless FTW!',
     createdAt: new Date().toISOString(),
     likes: 1
   },
   {
     id: '3',
-    user: 'joao@unb.br',
+    authorEmail: 'joao@unb.br',
     text: 'Quero ver o PUT de likes na pratica.',
     createdAt: new Date().toISOString(),
     likes: 5
@@ -58,13 +58,26 @@ const handleDialogOpenChange = (value: boolean) => {
         </p>
         <h1 class="text-3xl sm:text-4xl font-bold text-slate-900">Mural com likes e mensagens da comunidade</h1>
         <p class="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto">
-          Compartilhe novidades, deixe recados e celebre cada like. Autentique-se para publicar ou curtir mensagens na API REST.
+          Compartilhe novidades, deixe recados e celebre cada like. Autentique-se para publicar ou curtir mensagens na
+          API REST.
         </p>
 
         <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
-          <Button variant="outline" class="border-slate-200 bg-white text-slate-700 hover:bg-slate-50">
-            <component :is="isAuthenticated ? LogOut : LogIn" class="h-4 w-4 mr-2" />
-            {{ isAuthenticated ? 'Sair' : 'Entrar' }}
+          <Button 
+            v-if="!isAuthenticated" 
+            variant="outline"
+            class="border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+          >
+            <LogIn class="h-4 w-4 mr-2" />
+            Entrar
+          </Button>
+          <Button 
+            v-else 
+            variant="outline" 
+            class="border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+          >
+            <LogOut class="h-4 w-4 mr-2" />
+            Sair
           </Button>
 
           <Dialog :open="dialogOpen" @update:open="handleDialogOpenChange">
@@ -97,8 +110,7 @@ const handleDialogOpenChange = (value: boolean) => {
       </section>
 
       <section class="space-y-8">
-        <div
-          class="
+        <div class="
             grid gap-5
             grid-cols-1
             sm:grid-cols-2
@@ -109,7 +121,7 @@ const handleDialogOpenChange = (value: boolean) => {
             :key="m.id"
             :id="m.id"
             :text="m.text"
-            :user="m.user"
+            :user="m.authorEmail"
             :createdAt="m.createdAt"
             :likes="m.likes"
             :canLike="isAuthenticated"
@@ -120,8 +132,11 @@ const handleDialogOpenChange = (value: boolean) => {
     </main>
 
     <footer class="mt-auto px-4 py-8">
-      <p class="text-xs text-center text-slate-500">
+      <p v-if="isAuthenticated" class="text-xs text-center text-slate-500">
         Faça login para postar e curtir mensagens.
+      </p>
+      <p v-else class="text-xs text-center text-slate-500">
+        Amplify Guestbook - {{ new Date().getFullYear() }}
       </p>
     </footer>
   </div>
