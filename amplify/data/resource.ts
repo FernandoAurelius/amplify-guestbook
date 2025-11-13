@@ -7,7 +7,7 @@ const schema = a.schema({
       text: a.string().required().validate(v => v.maxLength(500, 'Texto da mensagem pode ter no máximo 500 caracteres!')),
       authorEmail: a.string(),
       likes: a.integer().default(0),
-      createdAt: a.datetime().default(Date.now()),
+      createdAt: a.datetime(),
     })
     .authorization((allow) => [
       allow.publicApiKey().to(['read']),
