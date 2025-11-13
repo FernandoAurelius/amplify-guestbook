@@ -3,9 +3,8 @@ import { ref, onMounted } from 'vue'
 import MessageCard from '@/components/MessageCard.vue'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Textarea } from '@/components/ui/textarea'
-import { Heart, LogIn, LogOut, Plus } from 'lucide-vue-next'
+import { Heart, LogIn, LogOut, Plus, Inbox } from 'lucide-vue-next'
 import { type Message, getMessages, createMessage, likeMessage } from '@/lib/api'
 
 const isAuthenticated = false
@@ -92,12 +91,38 @@ onMounted(async () => {
       </section>
 
       <section class="space-y-8">
-        <div class="
+        <div
+          v-if="messages.length === 0"
+          class="flex flex-col items-center justify-center rounded-3xl border border-dashed border-emerald-200/70 bg-white/60 px-6 py-14 text-center shadow-[0_0_50px_rgba(16,185,129,0.07)]"
+        >
+          <div class="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 text-emerald-500 mb-4">
+            <Inbox class="h-7 w-7" />
+          </div>
+          <p class="text-lg font-semibold text-slate-900">Nenhuma mensagem por aqui ainda</p>
+          <p class="text-sm text-slate-500 max-w-md mt-2">
+            Seja a primeira pessoa a compartilhar um recado. Autentique-se para abrir o editor e deixar sua mensagem.
+          </p>
+          <Button
+            class="mt-6 border border-emerald-100 bg-emerald-500 text-white hover:bg-emerald-400 disabled:bg-emerald-100 disabled:text-emerald-400"
+            :disabled="!isAuthenticated"
+            @click="triggerPrimaryAction"
+          >
+            <Plus class="h-4 w-4 mr-2" /> Escrever primeira mensagem
+          </Button>
+          <p v-if="!isAuthenticated" class="mt-3 text-xs text-emerald-600/70">
+            É preciso entrar para começar a conversa.
+          </p>
+        </div>
+
+        <div
+          v-else
+          class="
             grid gap-5
             grid-cols-1
             sm:grid-cols-2
             lg:grid-cols-3
-          ">
+          "
+        >
           <MessageCard
             v-for="m in messages"
             :key="m.id"
