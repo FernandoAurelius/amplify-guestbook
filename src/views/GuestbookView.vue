@@ -150,19 +150,11 @@ onMounted(async () => {
       </section>
     </main>
 
-<<<<<<< HEAD
     <footer class="mt-auto px-4 py-4">
-=======
-    <footer class="mt-auto px-4 py-8">
->>>>>>> 3d10e07 (feat(auth, ui): integra autenticação AWS Amplify e componentes UI)
       <p v-if="!isAuthenticated" class="text-xs text-center text-slate-500">
         Faça login para postar e curtir mensagens.
       </p>
-<<<<<<< HEAD
       <p v-else class="text-cs text-center text-slate-500">
-=======
-      <p v-else class="text-xs text-center text-slate-500">
->>>>>>> a38e3fe (refactor(guestbook): adiciona mensagem customizada de boas vindas)
         Amplify Guestbook - {{ new Date().getFullYear() }} - Bem-vindo, {{ auth.user?.signInDetails?.loginId }}
       </p>
     </footer>
