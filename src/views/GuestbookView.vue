@@ -35,7 +35,7 @@ const handleDialogOpenChange = (value: boolean) => {
 }
 
 onMounted(async () => {
-    messages.value = await getMessages()
+  messages.value = await getMessages()
 })
 </script>
 
@@ -47,7 +47,8 @@ onMounted(async () => {
   <div class="min-h-screen w-full bg-linear-to-b from-amber-50 via-white to-emerald-50 text-slate-800 flex flex-col">
     <main class="mx-auto w-full max-w-6xl px-4 py-10 space-y-10 flex-1">
       <section class="text-center space-y-4">
-        <p class="inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-white px-4 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-600 shadow-sm">
+        <p
+          class="inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-white px-4 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-600 shadow-sm">
           <Heart class="h-4 w-4 text-rose-500" /> Amplify Guestbook
         </p>
         <h1 class="text-3xl sm:text-4xl font-bold text-slate-900">Mural com likes e mensagens da comunidade</h1>
@@ -78,15 +79,11 @@ onMounted(async () => {
             <div class="relative inline-flex group">
               <Button
                 class="rounded-full h-12 w-12 bg-emerald-500 text-white hover:bg-emerald-400 transition-all duration-200 focus-visible:ring-2 focus-visible:ring-emerald-200 disabled:bg-emerald-100 disabled:text-emerald-400 disabled:cursor-not-allowed"
-                :disabled="!isAuthenticated"
-                @click="triggerPrimaryAction"
-              >
+                :disabled="!isAuthenticated" @click="triggerPrimaryAction">
                 <Plus class="h-5 w-5" />
               </Button>
-              <div
-                v-if="!isAuthenticated"
-                class="pointer-events-none absolute -top-16 left-1/2 w-56 -translate-x-1/2 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-[11px] font-semibold text-rose-600 shadow-xl opacity-0 translate-y-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-y-0"
-              >
+              <div v-if="!isAuthenticated"
+                class="pointer-events-none absolute -top-16 left-1/2 w-56 -translate-x-1/2 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-[11px] font-semibold text-rose-600 shadow-xl opacity-0 translate-y-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-y-0">
                 Faça login para poder enviar mensagens
               </div>
             </div>
@@ -154,6 +151,9 @@ onMounted(async () => {
     <footer class="mt-auto px-4 py-8">
       <p v-if="!isAuthenticated" class="text-xs text-center text-slate-500">
         Faça login para postar e curtir mensagens.
+      </p>
+      <p v-else class="text-xs text-center text-slate-500">
+        Amplify Guestbook - {{ new Date().getFullYear() }} - Bem-vindo, {{ auth.user?.signInDetails?.loginId }}
       </p>
     </footer>
   </div>
