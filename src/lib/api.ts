@@ -1,7 +1,7 @@
 import { generateClient } from "aws-amplify/api";
 import type { Schema } from '../../amplify/data/resource';
 
-type Message = Schema['Message'];
+export type Message = Schema['Message']['type'];
 
 const client = generateClient<Schema>();
 
