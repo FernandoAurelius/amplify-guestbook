@@ -1,39 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import MessageCard from '@/components/MessageCard.vue'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Textarea } from '@/components/ui/textarea'
 import { Heart, LogIn, LogOut, Plus } from 'lucide-vue-next'
-
-type Message = { id: string; authorEmail?: string; text: string; createdAt: string; likes: number }
+import { type Message, getMessages, createMessage, likeMessage } from '@/lib/api'
 
 const isAuthenticated = false
 const dialogOpen = ref(false)
 
-const messages: Message[] = [
-  {
-    id: '1',
-    authorEmail: 'demo@hackthecloud.unb',
-    text: 'Bem-vindo ao Amplify Guestbook!',
-    createdAt: new Date().toISOString(),
-    likes: 3
-  },
-  {
-    id: '2',
-    authorEmail: 'ana@unb.br',
-    text: 'Serverless FTW!',
-    createdAt: new Date().toISOString(),
-    likes: 1
-  },
-  {
-    id: '3',
-    authorEmail: 'joao@unb.br',
-    text: 'Quero ver o PUT de likes na pratica.',
-    createdAt: new Date().toISOString(),
-    likes: 5
-  }
-]
+const messages = ref<Message[]>([])
 
 const triggerPrimaryAction = () => {
   if (!isAuthenticated) {
@@ -47,6 +25,10 @@ const triggerPrimaryAction = () => {
 const handleDialogOpenChange = (value: boolean) => {
   dialogOpen.value = value
 }
+
+onMounted(async () => {
+    messages.value = await getMessages()
+})
 </script>
 
 <template>
